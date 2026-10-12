@@ -1,0 +1,277 @@
+/* Pulse — shared design tokens, glass material and controls */
+
+:root {
+  --font: "Segoe UI Variable Display", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-text: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+
+  /* Damped-spring curves (generated from x'' = -k(x-1) - c·x') */
+  --spring-soft: linear(0, 0.0171, 0.0614, 0.1241, 0.1981, 0.2779, 0.3592, 0.4391, 0.5154, 0.5864, 0.6515, 0.7101, 0.762, 0.8075, 0.8467, 0.8802, 0.9084, 0.9319, 0.9511, 0.9667, 0.979, 0.9887, 0.9961, 1.0016, 1.0055, 1.0082, 1.0099, 1.0108, 1.0111, 1.011, 1.0105, 1.0098, 1.009, 1.0081, 1.0072, 1.0063, 1.0055, 1.0047, 1.004, 1.0033, 1);
+  --spring: linear(0, 0.0211, 0.0769, 0.1569, 0.2523, 0.3556, 0.4608, 0.5632, 0.6592, 0.7466, 0.8238, 0.89, 0.9452, 0.9896, 1.0241, 1.0496, 1.067, 1.0777, 1.0828, 1.0833, 1.0803, 1.0748, 1.0675, 1.0592, 1.0505, 1.0417, 1.0334, 1.0256, 1.0186, 1.0125, 1.0073, 1.0031, 0.9997, 0.9971, 0.9952, 0.994, 0.9933, 0.993, 0.9931, 0.9934, 0.994, 0.9946, 0.9953, 0.9961, 0.9968, 0.9975, 0.9981, 0.9986, 1);
+  --spring-bouncy: linear(0, 0.0298, 0.1091, 0.2233, 0.3587, 0.5033, 0.6467, 0.7812, 0.9007, 1.0015, 1.0816, 1.1406, 1.1796, 1.2002, 1.2052, 1.1974, 1.1798, 1.1556, 1.1273, 1.0976, 1.0683, 1.0411, 1.0171, 0.997, 0.9812, 0.9697, 0.9623, 0.9585, 0.9579, 0.9599, 0.9637, 0.9689, 0.9747, 0.9809, 0.9868, 0.9923, 0.9972, 1.0012, 1.0043, 1.0065, 1.0079, 1.0086, 1.0086, 1.0081, 1.0073, 1.0062, 1.005, 1.0037, 1.0025, 1.0014, 1.0005, 0.9997, 0.999, 0.9986, 0.9983, 0.9982, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.5, 0, .75, 0);
+
+  --cpu: #0A84FF;
+  --gpu: #30D158;
+  --ram: #BF5AF2;
+  --disk: #FF9F0A;
+  --net: #64D2FF;
+  --llm: #FF375F;
+  --fans: #63E6E2;
+  --power: #FFD60A;
+  --battery: #34C759;
+  --red: #FF453A;
+  --orange: #FF9F0A;
+  --yellow: #FFD60A;
+  --green: #30D158;
+  --accent: #0A84FF;
+
+  --radius: 26px;
+  --tint: .5;
+  --blur: 34px;
+
+  color-scheme: dark;
+  --tint-rgb: 22, 22, 26;
+  --text: #F5F5F7;
+  --text-2: rgba(235, 235, 245, .62);
+  --text-3: rgba(235, 235, 245, .34);
+  --hair: rgba(255, 255, 255, .08);
+  --track: rgba(255, 255, 255, .085);
+  --platter: rgba(255, 255, 255, .055);
+  --platter-hi: rgba(255, 255, 255, .09);
+  --edge-hi: rgba(255, 255, 255, .26);
+  --edge-lo: rgba(255, 255, 255, .05);
+  --shadow: rgba(0, 0, 0, .5);
+  --control: rgba(255, 255, 255, .1);
+  --control-hi: rgba(255, 255, 255, .16);
+  --knob: #fff;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --tint-rgb: 246, 246, 248;
+  --wall-bright: 1.08;
+  --text: #1D1D1F;
+  --text-2: rgba(60, 60, 67, .7);
+  --text-3: rgba(60, 60, 67, .4);
+  --hair: rgba(0, 0, 0, .08);
+  --track: rgba(0, 0, 0, .07);
+  --platter: rgba(255, 255, 255, .5);
+  --platter-hi: rgba(255, 255, 255, .7);
+  --edge-hi: rgba(255, 255, 255, .85);
+  --edge-lo: rgba(255, 255, 255, .25);
+  --shadow: rgba(0, 0, 0, .28);
+  --control: rgba(0, 0, 0, .07);
+  --control-hi: rgba(0, 0, 0, .11);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: var(--font);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: default;
+}
+img { -webkit-user-drag: none; }
+button { font: inherit; color: inherit; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* ------------------------------------------------------------------ glass */
+
+.glass {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--wall-avg, rgb(var(--tint-rgb)));
+  isolation: isolate;
+}
+.glass .wall {
+  position: absolute;
+  left: 0; top: 0;
+  background-size: 100% 100%;
+  filter: blur(var(--blur)) saturate(1.7) brightness(var(--wall-bright, .72));
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.glass .tint {
+  position: absolute; inset: 0;
+  background: rgba(var(--tint-rgb), var(--tint));
+}
+.glass .grain {
+  position: absolute; inset: 0;
+  opacity: .045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+:root[data-glass="clear"] .glass { background: transparent; }
+:root[data-glass="clear"] .glass .wall { display: none; }
+:root[data-glass="solid"] .glass .wall { display: none; }
+:root[data-glass="solid"] .glass { background: rgb(var(--tint-rgb)); }
+:root[data-glass="solid"] .glass .tint { background: rgba(var(--tint-rgb), 1); }
+
+/* hairline edge: bright on top like light catching the rim of the glass */
+.rim {
+  position: absolute; inset: 0;
+  border-radius: var(--radius);
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(170deg, var(--edge-hi), var(--edge-lo) 38%, var(--edge-lo) 70%, rgba(255,255,255,.12));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* ------------------------------------------------------------------ controls (settings) */
+
+.switch {
+  --on: var(--green);
+  position: relative;
+  width: 42px; height: 26px;
+  border-radius: 13px;
+  background: var(--control-hi);
+  transition: background .25s ease;
+  flex: none;
+  cursor: pointer;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 2px 6px rgba(0,0,0,.25), 0 0 0 .5px rgba(0,0,0,.04);
+  transition: transform .45s var(--spring), width .2s ease;
+}
+.switch:active::after { width: 27px; }
+.switch.on { background: var(--on); }
+.switch.on::after { transform: translateX(16px); }
+.switch.on:active::after { transform: translateX(11px); }
+
+.seg {
+  position: relative;
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--control);
+  flex: none;
+}
+.seg button {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  padding: 4px 12px;
+  min-width: 34px;
+  font-size: 12.5px;
+  border-radius: 7px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color .2s;
+  white-space: nowrap;
+}
+.seg button.on { color: var(--text); }
+.seg .thumb {
+  position: absolute;
+  top: 2px; bottom: 2px;
+  border-radius: 7px;
+  background: var(--control-hi);
+  box-shadow: 0 1px 3px rgba(0,0,0,.18), inset 0 .5px 0 rgba(255,255,255,.12);
+  transition: transform .5s var(--spring), width .5s var(--spring);
+}
+:root[data-theme="light"] .seg .thumb { background: #fff; }
+.seg.icons button { padding: 4px 7px; min-width: 30px; display: grid; place-items: center; }
+.seg.icons svg { width: 16px; height: 16px; }
+
+.slider {
+  --v: .5;
+  position: relative;
+  width: 200px; height: 22px;
+  flex: none;
+  cursor: pointer;
+  touch-action: none;
+}
+.slider::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 9px; height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent) calc(var(--v) * 100%), var(--control-hi) 0);
+}
+.slider i {
+  position: absolute;
+  top: 1px;
+  left: calc(var(--v) * (100% - 20px));
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 1px 5px rgba(0,0,0,.3), 0 0 0 .5px rgba(0,0,0,.06);
+  transition: transform .3s var(--spring);
+}
+.slider.drag i { transform: scale(1.12); }
+
+.btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  background: var(--control-hi);
+  cursor: pointer;
+  transition: transform .3s var(--spring), background .2s;
+  white-space: nowrap;
+}
+.btn:hover { background: color-mix(in srgb, var(--control-hi), var(--text) 6%); }
+.btn:active { transform: scale(.96); }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.danger { color: var(--red); }
+
+.chip {
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  background: var(--control);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .3s var(--spring);
+}
+.chip:active { transform: scale(.95); }
+.chip.on { background: var(--accent); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --spring: ease-out; --spring-soft: ease-out; --spring-bouncy: ease-out; }
+}
+:root[data-anim="off"] *, :root[data-anim="off"] *::before, :root[data-anim="off"] *::after {
+  transition-duration: 0s !important;
+  animation-duration: 0s !important;
+}
+:root[data-anim="reduced"] { --spring: var(--ease-out); --spring-bouncy: var(--ease-out); }
+
+/* ---------------------------------------------------------------- Windows 11 caption buttons */
+/* Minimize / close as in Windows 11: 46 × 32, Segoe Fluent Icons glyphs, a soft hover, red close. */
+.caption { display: flex; align-items: stretch; }
+.cb {
+  width: 46px; height: 32px; padding: 0; border: 0; border-radius: 0;
+  display: grid; place-items: center; background: transparent; color: var(--text);
+  font: 10px/1 "Segoe Fluent Icons", "Segoe MDL2 Assets"; cursor: default;
+  transition: background-color 83ms linear, color 83ms linear;
+}
+.cb:hover { background: color-mix(in srgb, var(--text) 9%, transparent); }
+.cb:active { background: color-mix(in srgb, var(--text) 5%, transparent); color: var(--text-2); }
+.cb.close:hover { background: #C42B1C; color: #fff; }
+.cb.close:active { background: #C42B1C; color: rgba(255, 255, 255, .72); }
+
+/* vendor logos (shared by widgets and settings) */
+.logo { display: inline-flex; align-items: center; flex: none; height: 11px; }
+.logo img { height: 100%; width: auto; max-width: 104px; object-fit: contain; object-position: left center; display: block; }
+:root[data-theme="light"] .logo .lg-d { display: none; }
+:root:not([data-theme="light"]) .logo .lg-l { display: none; }
+/* single-colour marks bundled in ui/logos/b: white on dark, near-black on light */
+.logo img.mono { filter: brightness(0) invert(1); opacity: .94; }
+.logo img.monol { filter: brightness(0); opacity: .82; }

@@ -1,0 +1,16 @@
+# build output
+/app/
+/app-test/
+/build/
+/dist/
+
+# restored by tools/restore.ps1 (the C# compiler from NuGet)
+/packages/
+
+# early experiments
+/probe/
+/spike/
+
+*.user
+*.suo
+Thumbs.db

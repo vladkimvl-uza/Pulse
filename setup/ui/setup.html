@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Pulse Setup</title>
+<link rel="stylesheet" href="setup.css">
+</head>
+<body>
+<div id="stage">
+  <div id="card">
+    <div class="aurora"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+    <div class="grain"></div>
+    <div class="rim"></div>
+
+    <header data-drag>
+      <div class="langs" id="langs"></div>
+      <div class="caption" data-nodrag><button class="cb min" data-act="minimize">&#xE921;</button><button class="cb close" data-act="close">&#xE8BB;</button></div>
+    </header>
+
+    <section class="hero" data-drag>
+      <div class="logo" id="logo">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A84FF"/><stop offset="1" stop-color="#64D2FF"/></linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#30D158"/><stop offset="1" stop-color="#A0F578"/></linearGradient>
+            <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#BF5AF2"/><stop offset="1" stop-color="#FF6EC8"/></linearGradient>
+          </defs>
+          <g class="tracks"><circle cx="100" cy="100" r="84"/><circle cx="100" cy="100" r="64"/><circle cx="100" cy="100" r="44"/></g>
+          <circle class="r r1" cx="100" cy="100" r="84" stroke="url(#g1)"/>
+          <circle class="r r2" cx="100" cy="100" r="64" stroke="url(#g2)"/>
+          <circle class="r r3" cx="100" cy="100" r="44" stroke="url(#g3)"/>
+          <path class="check" d="M78 101 L94 117 L124 85"/>
+        </svg>
+        <div class="pct"><span id="pct">0</span><small>%</small></div>
+      </div>
+      <h1>Pulse</h1>
+      <div class="ver" id="ver"></div>
+    </section>
+
+    <main id="pages">
+      <!-- welcome -->
+      <section class="page" data-page="welcome">
+        <h2 data-t="welcomeTitle"></h2>
+        <p class="lead" data-t="welcomeLead"></p>
+        <div class="device" id="device" hidden><i id="devIcon"></i><div><b id="devName"></b><span id="devSub"></span></div></div>
+        <ul class="feats">
+          <li><i style="--c:#0A84FF"></i><span data-t="f1"></span></li>
+          <li><i style="--c:#30D158"></i><span data-t="f2"></span></li>
+          <li><i style="--c:#BF5AF2"></i><span data-t="f3"></span></li>
+          <li><i style="--c:#FFD60A" id="f4dot"></i><span data-t="f4" id="f4"></span></li>
+        </ul>
+        <div class="actions">
+          <button class="btn primary" data-act="install" id="installBtn"></button>
+          <button class="link" data-act="options" data-t="options"></button>
+        </div>
+      </section>
+
+      <!-- options -->
+      <section class="page" data-page="options">
+        <h2 data-t="optionsTitle"></h2>
+        <div class="list">
+          <label class="opt"><div><b data-t="oAutostart"></b><span data-t="oAutostartSub"></span></div><span class="sw on" data-opt="autostart"></span></label>
+          <label class="opt"><div><b data-t="oSensors"></b><span data-t="oSensorsSub"></span></div><span class="sw on" data-opt="sensors"></span></label>
+          <label class="opt"><div><b data-t="oDesktop"></b><span data-t="oDesktopSub"></span></div><span class="sw" data-opt="desktop"></span></label>
+          <div class="opt path"><div><b data-t="oFolder"></b><span id="dir"></span></div><button class="btn small" data-act="browse" data-t="change"></button></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" data-act="install" id="installBtn2"></button>
+          <button class="link" data-act="back" data-t="back"></button>
+        </div>
+      </section>
+
+      <!-- progress -->
+      <section class="page" data-page="progress">
+        <h2 id="progTitle"></h2>
+        <p class="lead" id="status"></p>
+        <ol class="steps" id="steps"></ol>
+      </section>
+
+      <!-- done -->
+      <section class="page" data-page="done">
+        <h2 id="doneTitle"></h2>
+        <p class="lead" id="doneLead"></p>
+        <div class="actions">
+          <button class="btn primary" data-act="finish" id="finishBtn"></button>
+        </div>
+      </section>
+
+      <!-- uninstall confirm -->
+      <section class="page" data-page="uninstall">
+        <h2 data-t="unTitle"></h2>
+        <p class="lead" data-t="unLead"></p>
+        <div class="list">
+          <label class="opt"><div><b data-t="unKeep"></b><span data-t="unKeepSub"></span></div><span class="sw on" data-opt="keep"></span></label>
+        </div>
+        <div class="actions">
+          <button class="btn danger" data-act="uninstall" data-t="unBtn"></button>
+          <button class="link" data-act="close" data-t="cancel"></button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script src="setup.js"></script>
+</body>
+</html>

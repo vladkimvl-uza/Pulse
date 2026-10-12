@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Pulse FPS</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  html, body { background: transparent; }
+  #hud {
+    position: absolute; inset: var(--m, 26px);
+    border-radius: 16px;
+    padding: 8px 12px 9px;
+    background: rgba(14, 14, 18, var(--bg, .72));
+    box-shadow: 0 6px 16px -6px rgba(0,0,0,.6), inset 0 0 0 .5px rgba(255,255,255,.14), inset 0 1px 0 rgba(255,255,255,.08);
+    color: #F5F5F7;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px; row-gap: 5px;
+    opacity: 0;
+    transform: translateY(-6px) scale(.96);
+    transition: opacity .3s ease, transform .5s var(--spring);
+  }
+  body.on #hud { opacity: var(--op, .92); transform: none; }
+  :root { color-scheme: dark; }
+  .fps { display: flex; align-items: baseline; gap: 4px; }
+  .fps .n { font-size: 30px; font-weight: 700; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; color: var(--fc, #30D158); text-shadow: 0 0 14px color-mix(in srgb, var(--fc, #30D158) 45%, transparent); transition: color .5s; }
+  .fps .u { font-size: 10px; font-weight: 700; letter-spacing: .08em; color: rgba(235,235,245,.6); }
+  .meta { grid-column: 1; font-size: 10.5px; color: rgba(235,235,245,.62); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .meta b { color: #F5F5F7; font-weight: 600; }
+  canvas { grid-row: 1 / 3; grid-column: 2; width: 100%; height: 100%; min-height: 40px; }
+  .sens { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,.08); }
+  .sens div { display: flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sens i { font-style: normal; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; color: var(--c); }
+  .sens b { font-size: 14px; font-weight: 650; }
+  .sens span { font-size: 12px; font-weight: 600; color: var(--heat, #8E8E93); }
+  .sens span::before { content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--heat, #8E8E93); margin-right: 4px; vertical-align: 2px; box-shadow: 0 0 5px var(--heat); }
+  body.c-fps #hud { grid-template-columns: auto; }
+  body.c-fps canvas, body.c-fps .sens, body.c-graph .sens { display: none; }
+  body.c-fps .meta { grid-column: 1; }
+  body.c-graph #hud, body.c-fps #hud { grid-template-rows: auto auto; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div class="fps"><span class="n"><span data-fps>0</span></span><span class="u">FPS</span></div>
+  <canvas></canvas>
+  <div class="meta">1% <b data-low>–</b> · <b data-ft>–</b></div>
+  <div class="sens">
+    <div style="--c: var(--cpu)"><i>CPU</i><b data-cl>–</b><span data-ct>–</span></div>
+    <div style="--c: var(--gpu)"><i>GPU</i><b data-gl>–</b><span data-gt>–</span></div>
+  </div>
+</div>
+<script src="i18n.js"></script>
+<script src="core.js"></script>
+<script>
+'use strict';
+const q = s => document.querySelector(s);
+const fpsOdo = new Odo(q('[data-fps]'));
+const canvas = q('canvas'), ctx = canvas.getContext('2d');
+let last = null;
+
+function fpsColor(f) { return f >= 60 ? '#30D158' : f >= 30 ? '#FFD60A' : '#FF453A'; }
+
+function drawGraph(series) {
+  const r = canvas.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  if (!r.width) return;
+  if (canvas.width !== Math.round(r.width * dpr)) { canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, r.width, r.height);
+  if (!series || series.length < 2) return;
+  // Frame time: lower is better, spikes stand out as stutter.
+  const max = Math.max(20, ...series) * 1.15, w = r.width, hh = r.height - 2;
+  const pts = series.map((v, i) => [i / (series.length - 1) * w, 1 + hh - Math.min(1, v / max) * hh]);
+  const grad = ctx.createLinearGradient(0, 0, 0, r.height);
+  const col = getComputedStyle(document.body).getPropertyValue('--fc') || '#30D158';
+  grad.addColorStop(0, col.trim() + '55'); grad.addColorStop(1, col.trim() + '00');
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+  ctx.lineTo(w, r.height); ctx.lineTo(0, r.height); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+  ctx.strokeStyle = col.trim(); ctx.lineWidth = 1.3; ctx.lineJoin = 'round'; ctx.stroke();
+}
+
+P.on('fps', m => {
+  last = m;
+  document.body.className = 'on c-' + (m.content || 'sensors');
+  const f = m.fps || 0;
+  document.body.style.setProperty('--fc', fpsColor(f));
+  fpsOdo.set(String(Math.round(f)));
+  q('[data-low]').textContent = m.low ?? '–';
+  q('[data-ft]').textContent = P.fmt.num(m.ft || 0, 1) + ' ' + (P.lang() === 'en' ? 'ms' : 'мс');
+  if (m.cpu && m.gpu) {
+    const a = P.g().alerts || {};
+    q('[data-cl]').textContent = P.fmt.pct(m.cpu.load) + '%';
+    q('[data-gl]').textContent = P.fmt.pct(m.gpu.load) + '%';
+    const ct = q('[data-ct]'), gt = q('[data-gt]');
+    ct.textContent = P.fmt.temp(m.cpu.temp); ct.style.setProperty('--heat', P.heat(m.cpu.temp, a.cpuTemp || 90));
+    gt.textContent = P.fmt.temp(m.gpu.temp); gt.style.setProperty('--heat', P.heat(m.gpu.temp, a.gpuTemp || 85));
+  }
+  if (m.content !== 'fps') drawGraph(m.series);
+});
+P.on('init', m => document.documentElement.style.setProperty('--m', m.margin + 'px'));
+const applyOpacity = () => { const f = P.g().fps || {}; document.documentElement.style.setProperty('--op', f.opacity ?? .92); };
+P.on('settings', applyOpacity);
+P.on('init', applyOpacity);
+P.send('ready');
+</script>
+</body>
+</html>
