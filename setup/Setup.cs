@@ -73,6 +73,8 @@ namespace PulseSetup
             string dir = di >= 0 && di + 1 < argv.Length ? argv[di + 1] : null;
 
             SetupWindow.Demo = args.Contains("--demo"); SetupWindow.AutoRun = SetupWindow.Demo && args.Contains("--auto");
+            int li = Array.FindIndex(argv, a => a.Equals("--lang", StringComparison.OrdinalIgnoreCase));
+            if (li >= 0 && li + 1 < argv.Length) SetupWindow.LangOverride = argv[li + 1].ToLowerInvariant();
             if (args.Contains("--quiet"))
             {
                 var eng = new Engine(dir ?? Engine.DefaultDir, null);

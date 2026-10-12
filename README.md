@@ -1,3 +1,5 @@
+<p align="right"><b>Русский</b> · <a href="README.en.md">English</a></p>
+
 # Pulse
 
 **Живые виджеты нагрузки, температур и энергии прямо на рабочем столе Windows.** Процессор, видеокарта, память, диски, сеть, вентиляторы, блок питания, аккумулятор ноутбука, локальная нейросеть и FPS в играх — в стеклянных виджетах с плавной анимацией, в духе Apple.
@@ -110,10 +112,3 @@ Pulse пару часов изучает, что нормально именно
 
 [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) · [PawnIO](https://pawnio.eu/) · [Intel PresentMon](https://github.com/GameTechDev/PresentMon) · [Microsoft Edge WebView2](https://aka.ms/webview) · [Simple Icons](https://simpleicons.org/) · [Wikimedia Commons](https://commons.wikimedia.org/)
 
----
-
-## English
-
-**Pulse** is a desktop widget for Windows 10/11 that shows CPU, GPU (NVIDIA, AMD, Intel, integrated), memory, disks, network and connection quality, fans, power draw and energy use, laptop battery, a local LLM (llama.cpp in Docker) and in-game FPS — in Apple-style glass widgets with smooth motion. It learns what is normal for your PC and flags anomalies (running hotter than usual, a stalled fan, load while you're away, memory leaks, PSU rail drift, a worse connection). Widgets live on the desktop or above all windows, resize from any edge, snap to edges, minimize to a one-line capsule, and let you pick what each module shows. Hidden widgets pause; Auto/Max/Balanced/Eco performance modes keep it light. UI in Russian, Uzbek and English.
-
-Download the single-file installer from [Releases](../../releases/latest). Build from source with `.\build.ps1` (no Visual Studio needed).

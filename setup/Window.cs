@@ -98,7 +98,7 @@ namespace PulseSetup
             {
                 case "ready":
                     ready = true;
-                    var lang = CultureInfo.InstalledUICulture.TwoLetterISOLanguageName;
+                    var lang = LangOverride ?? CultureInfo.InstalledUICulture.TwoLetterISOLanguageName;
                     Post(new Dictionary<string, object>
                     {
                         ["type"] = "init", ["auto"] = AutoRun, ["device"] = Device.Kind(), ["model"] = Device.Model(), ["mode"] = uninstall ? "uninstall" : "install", ["version"] = Program.Version, ["dir"] = dir,
@@ -145,6 +145,8 @@ namespace PulseSetup
 
         /// <summary>"--demo": the pages run through their steps without touching the system (design checks).</summary>
         public static bool Demo, AutoRun;
+        /// <summary>"--lang ru|uz|en": the page language instead of the Windows one.</summary>
+        public static string LangOverride;
 
         void Simulate(bool removing, bool keep)
         {
